@@ -1,10 +1,10 @@
 <template>
 <card>
-  <card-header class="flex items-center flex-row justify-between p-3">
+  <card-header class="flex items-center flex-row justify-between flex-wrap p-3">
     <card-title class="text-sm">
       {{ title }}
     </card-title>
-    <div class="flex gap-3">
+    <div class="flex gap-3 flex-wrap sm:flex-nowrap">
       <Button variant="secondary" v-if="selectedTodos.length" @click="removeSelectedTodos">Удалить все выбранные</Button>
       <Button :variant="selectionMode ? 'default' :'outline'" @click="toggleSelectionMode">
         <ListBulletIcon />
@@ -13,6 +13,7 @@
         <PlusIcon />
         Добавить задачу
       </Button>
+      <Input placeholder="Поиск" v-model="searchQuery" />
     </div>
   </card-header>
   <separator />
@@ -24,6 +25,7 @@
             <draggable v-model="column.items" class="flex flex-col gap-3 min-h-[200px]" :key="generateColumnKey(column.items)">
               <template #item="{ item }">
                 <todo-task-item
+                  v-show="isTodoSatisfiesSearchQuery(item)"
                   :selection-mode="selectionMode"
                   :selected="isTodoSelected(item)"
                   :key="item.id"
@@ -53,6 +55,7 @@ import ToDoColumn from "@/components/todo/column.vue";
 import {PlusIcon, ListBulletIcon } from "@heroicons/vue/24/solid";
 import Draggable from "vue3-draggable";
 import TodoTaskItem from "@/components/todo/item.vue";
+import {Input} from "@/components/ui/input";
 
 interface Props {
   title: string;
@@ -70,6 +73,9 @@ defineOptions({
 
 defineProps<Props>();
 const todos = defineModel<TodoBoard>('modelValue', { required: true });
+
+
+const searchQuery = ref('');
 
 const selectionMode = ref(false);
 const selectedTodos = ref<TodoItem[]>([]);
@@ -101,6 +107,9 @@ function removeSelectedTodos(): void  {
 }
 function generateColumnKey(items: TodoItem[]): string {
   return JSON.stringify({ items, count: items.length })
+}
+function isTodoSatisfiesSearchQuery(item: TodoItem): boolean {
+  return item.title.includes(searchQuery.value);
 }
 </script>
 <style scoped>

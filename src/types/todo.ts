@@ -3,7 +3,6 @@ export type TodoItem  = {
     title: string;
     description: string;
     status: TodoStatus;
-    priority: number;
 }
 
 export type TodoList = TodoItem[];
