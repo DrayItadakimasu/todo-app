@@ -4,6 +4,12 @@ export type TodoItem  = {
     description: string;
     status: TodoStatus;
 }
+export type RawTodoItem = {
+    id?: TodoItem['id'];
+    title: TodoItem['title'];
+    description: TodoItem['description'];
+    status?: TodoItem['status']
+}
 
 export type TodoList = TodoItem[];
 export type TodoStatus = 'completed' | 'notCompleted' | 'inWork';

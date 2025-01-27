@@ -27,14 +27,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog";
-import type {TodoDialogExpose, TodoItem} from "@/types/todo.ts";
+import type {RawTodoItem, TodoDialogExpose, TodoItem} from "@/types/todo.ts";
 import {DialogRoot} from "radix-vue";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -43,8 +42,8 @@ import {Label} from "@/components/ui/label";
 
 
 interface Emits {
-  (e: 'save', item: Partial<TodoItem>): unknown;
-  (e: 'remove', item: Partial<TodoItem>): unknown;
+  (e: 'save', item: RawTodoItem): unknown;
+  (e: 'remove', item: RawTodoItem): unknown;
 }
 
 defineOptions({
@@ -63,11 +62,10 @@ function setData(data?: TodoItem): void {
     todo.value = todoPrototype();
   }
 }
-function todoPrototype(): Partial<TodoItem> {
+function todoPrototype(): RawTodoItem {
   return {
     title: '',
     description: '',
-    priority: 0,
   }
 }
 function save(): void {

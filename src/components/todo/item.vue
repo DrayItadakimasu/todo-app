@@ -9,8 +9,8 @@
           </Button>
         </dropdown-menu-trigger>
         <dropdown-menu-content>
-          <dropdown-menu-item @click.stop="emitEvent('edit')">Редактировать</dropdown-menu-item>
-          <dropdown-menu-item @click.stop="emitEvent('remove')">Удалить</dropdown-menu-item>
+          <dropdown-menu-item @click.stop="emit('edit', item)">Редактировать</dropdown-menu-item>
+          <dropdown-menu-item @click.stop="emit('remove', item)">Удалить</dropdown-menu-item>
         </dropdown-menu-content>
       </dropdown-menu>
     </card-header>
@@ -43,13 +43,9 @@ defineOptions({
   name: 'TodoItem'
 });
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const emit = defineEmits<Emits>();
-
-function emitEvent(eventName: 'edit' | 'remove'): void {
-  emit(eventName, {...props.item});
-}
 
 </script>
 <style scoped>

@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import {Button} from "@/components/ui/button";
 import {MoonIcon, SunIcon} from "@heroicons/vue/24/solid";
-import {useTheme} from "@/composables/useTheme.ts";
+import {useTheme} from "@/composables/useTheme";
 
 
 const { theme, setTheme } = useTheme();

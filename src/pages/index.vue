@@ -13,13 +13,13 @@
 </template>
 <script setup lang="ts">
 import ToDoBoard from "@/components/todo/board.vue";
-import type {TodoDialogExpose, TodoItem} from "@/types/todo.ts";
+import type {RawTodoItem, TodoBoard, TodoDialogExpose, TodoItem, TodoStatus} from "@/types/todo.ts";
 import {watch, ref, onMounted} from "vue";
 import ToDoDialog from "@/components/todo/dialog.vue";
 import type {Maybe} from "@/types";
 
 const CACHE_KEY = 'TODOS';
-const todos = ref({
+const todos = ref<TodoBoard>({
   notCompleted: {
     title: 'Не завершенные',
     items: []
@@ -46,17 +46,20 @@ function addTodo(): void {
   showTodoDialog.value = true;
 }
 function removeTodo(item: TodoItem): void {
-  todos.value[item.status].items = todos.value[item.status].items.filter(todo => todo.id !== item.id);
+  const key: TodoStatus = item.status;
+  todos.value[key].items = todos.value[key].items.filter(todo => todo.id !== item.id);
 }
-function handleSaveTodo(item: Partial<TodoItem>): void {
+function handleSaveTodo(item: RawTodoItem): void {
   if(item.id && item.status) {
-    todos.value[item.status].items = todos.value[item.status].items.map(todo => todo.id === item.id ? item : todo);
+    todos.value[item.status].items = todos.value[item.status].items.map(todo => todo.id === item.id ? item as TodoItem : todo);
   } else {
-    todos.value.notCompleted.items.push({
-      ...item,
+    const newTodo: TodoItem = {
+      title: item.title,
+      description: item.description,
       status: 'notCompleted',
       id: Math.floor(Math.random() * 1000)
-    })
+    };
+    todos.value.notCompleted.items.push(newTodo);
   }
   showTodoDialog.value = false;
 }
@@ -75,8 +78,8 @@ function removeBunch(items: TodoItem[]): void {
     removeTodo(item);
   })
 }
-function removeTodoFromDialog(item: TodoItem): void {
-  removeTodo(item);
+function removeTodoFromDialog(item: Partial<TodoItem>): void {
+  removeTodo(item as TodoItem);
   showTodoDialog.value = false;
 }
 
